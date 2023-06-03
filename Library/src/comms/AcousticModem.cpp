@@ -29,6 +29,7 @@
 #include "core/SimulationApp.h"
 #include "core/SimulationManager.h"
 #include "graphics/OpenGLPipeline.h"
+#include <iostream>
 
 namespace sf
 {
@@ -202,6 +203,11 @@ void AcousticModem::SendMessage(std::string data)
     }
 }
 
+void AcousticModem::getAcomInfo(Scalar& time, std::string& msg) {
+    time = receivedTime;
+    msg = receivedMsg;
+}
+
 void AcousticModem::ProcessMessages()
 {
     AcousticDataFrame* msg;
@@ -216,6 +222,21 @@ void AcousticModem::ProcessMessages()
             msg->data = "ACK";
             msg->txPosition = getDeviceFrame().getOrigin();
             txBuffer.push_back(msg);
+
+            //Prepare the Acom message for ROS
+            receivedTime = msg->receivedTime;
+
+            // Ping,USBL_Time,USBL_seq,source_id,destination_id,source_pos_x,source_pos_y,source_pos_z
+            receivedMsg = "Ping," + 
+                          std::to_string(msg->timeStamp)+ ',' +
+                          std::to_string(msg->seq)+ ',' +
+                          std::to_string(msg->source)+ ',' +
+                          std::to_string(msg->destination)+ ',' +
+                          std::to_string(msg->txPosition[0])+ ',' +
+                          std::to_string(msg->txPosition[1])+ ',' +
+                          std::to_string(msg->txPosition[2])+ ',' ;
+
+            newCommAvailable = true;                              
         }
         else
         {

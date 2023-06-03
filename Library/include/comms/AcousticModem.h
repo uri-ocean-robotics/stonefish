@@ -28,6 +28,7 @@
 
 #include <map>
 #include "comms/Comm.h"
+#include <tuple>
 
 namespace sf
 {
@@ -96,11 +97,16 @@ namespace sf
         //! A method returning the type of the comm.
         virtual CommType getType() const;
         
+        //! A method returning the time and msg received by Acom
+        void getAcomInfo(Scalar& time, std::string& msg);
+
     protected:
         virtual void ProcessMessages();
         
         static AcousticModem* getNode(uint64_t deviceId);
         
+        Scalar receivedTime;
+        std::string receivedMsg;
     private:
         bool isReceptionPossible(Vector3 dir, Scalar distance);
         

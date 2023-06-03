@@ -41,6 +41,7 @@ Comm::Comm(std::string uniqueName, uint64_t deviceId)
     cId = -1;
     renderable = false;
     newDataAvailable = false;
+    newCommAvailable = false;
     updateMutex = SDL_CreateMutex();
     attach = nullptr;
     o2c = I4();
@@ -91,6 +92,16 @@ bool Comm::isNewDataAvailable()
     return newDataAvailable;
 }
 
+void Comm::MarkCommOld()
+{
+    newCommAvailable = false;
+}
+
+bool Comm::isNewCommAvailable()
+{
+    return newCommAvailable;
+}
+
 void Comm::setRenderable(bool render)
 {
     renderable = render;
@@ -135,6 +146,7 @@ CommDataFrame* Comm::ReadMessage()
 
 void Comm::MessageReceived(CommDataFrame* message)
 {
+    message->receivedTime = SimulationApp::getApp()->getSimulationManager()->getSimulationTime();
     rxBuffer.push_back(message);
 }
 

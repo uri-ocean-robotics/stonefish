@@ -43,6 +43,7 @@ namespace sf
     struct CommDataFrame
     {
         Scalar timeStamp;
+        Scalar receivedTime;
         uint64_t seq;
         uint64_t source;
         uint64_t destination;
@@ -116,6 +117,12 @@ namespace sf
         //! A method to check if new data is available.
         bool isNewDataAvailable();
         
+        //! A method used to mark communication as old.
+        void MarkCommOld();
+        
+        //! A method to check if new communication is available.
+        bool isNewCommAvailable();
+
         //! A method informing if the comm is renderable.
         bool isRenderable();
         
@@ -150,9 +157,11 @@ namespace sf
         virtual void ProcessMessages() = 0;
     
         bool newDataAvailable;
+        bool newCommAvailable;
         std::deque<CommDataFrame*> txBuffer;
         std::deque<CommDataFrame*> rxBuffer;
         uint64_t txSeq;
+        Scalar receivedTime;
         
     private:
         std::string name;

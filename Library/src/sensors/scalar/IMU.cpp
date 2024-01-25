@@ -27,6 +27,8 @@
 
 #include "entities/MovingEntity.h"
 #include "sensors/Sample.h"
+#include "core/SimulationApp.h"
+#include "core/SimulationManager.h"
 
 namespace sf
 {
